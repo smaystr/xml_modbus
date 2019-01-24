@@ -4,7 +4,7 @@ After=multi-user.target
 
 [Service]
 PIDFile=/var/run/xml_modbus.pid
-WorkingDirectory=/media/smaystr/disk/SCADA/xml_modbus/
+WorkingDirectory=/usr/local/sbin/xml_modbus/
 ExecStart=/usr/bin/python3.5 /usr/local/sbin/xml_modbus/main.py
 StandardOutput=syslog
 StandardError=syslog
