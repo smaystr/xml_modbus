@@ -9,6 +9,7 @@ $ sudo chmod 664 /etc/systemd/system/xml_modbus-daemon.service
 Open the file xml_modbus-daemon.service and add the minimum settings.
 
 for example:
+
 [Unit]
 Description=manages xml_modbus worker instances as a service
 After=multi-user.target
