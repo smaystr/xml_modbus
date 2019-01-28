@@ -18,7 +18,6 @@ class SocketClientThread(threading.Thread):
     def run(self):
         # global results
         size = 65535
-        # print("Starting Client (listing to port %d %s)" % (self.port, self.host))
         with self.sock as _socket:
             while True:
                 try:
@@ -47,11 +46,27 @@ class SocketClientThread(threading.Thread):
                                     _camera_name = device.find('CameraName').text
                                     # print(_name, _type, _addr, _state, _camera_id, _camera_name)
                                     q.put([_name, _type, _addr, _state, _camera_id, _camera_name])
-
+                        if root.get('Type') == "Alarm":
+                            for alarm in root.findall('Alarm'):
+                                _alarm_id = alarm.get('Id')
+                                _type = alarm.find('Type')
+                                if type(_type) != 'NoneType':
+                                    _type = _type.text
+                                    _camera_name = alarm.find('CameraName').text
+                                    _camera_id = device.find('CameraId').text
+                                    _lane_id = device.find('LaneId').text
+                                    _start_time = device.find('StartTime').text
+                                    _end_time = device.find('EndTime').text
+                                    _comment = device.find('Comment').text
+                                    _video_clip_name = device.find('VideoClipName').text
+                                    _row_ratio = device.find('RowRatio').text
+                                    _column_ratio = device.find('ColumnRatio').text
+                                    q.put([_alarm_id, _type, _camera_name, _camera_id,
+                                          _lane_id, _start_time, _end_time, _comment,
+                                          _video_clip_name, _row_ratio, _column_ratio])
                 except (ConnectionResetError, error) as e:
                     # print(e)
                     break
-
                 except Exception as ex:
                     # print(ex)
                     break
