@@ -61,9 +61,9 @@ class SocketClientThread(threading.Thread):
                                     _video_clip_name = device.find('VideoClipName').text
                                     _row_ratio = device.find('RowRatio').text
                                     _column_ratio = device.find('ColumnRatio').text
-                                    q.put([_alarm_id, _type, _camera_name, _camera_id,
-                                          _lane_id, _start_time, _end_time, _comment,
-                                          _video_clip_name, _row_ratio, _column_ratio])
+                                    q.put([_alarm_id, _type, _comment, _video_clip_name, _camera_id, _camera_name,
+                                           _lane_id, _start_time, _end_time,
+                                           _row_ratio, _column_ratio])
                 except (ConnectionResetError, error) as e:
                     # print(e)
                     break

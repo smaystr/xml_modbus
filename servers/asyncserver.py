@@ -58,7 +58,7 @@ def updating_writer(a):
 
     socket_client_thr = SocketClientThread()
     socket_client_thr.start()
-    echo = ['0', '0', '0', '0', '0', '0']
+    echo = ['0']*10
     results = q.get()
     if results:
         echo = results
@@ -66,8 +66,45 @@ def updating_writer(a):
 
     values = context[slave_id].getValues(register, address, count=287)
 
-    value = (int(echo[4]) - 1) * 13
-    values[value] = 1 if echo[3] == 'OK' else 0
+    if echo[1] == 'Camera':
+        value = (int(echo[4]) - 1) * 13
+        values[value] = 1 if echo[3] == 'OK' else 0
+    elif echo[1] == 'StopF':
+        value = (int(echo[4]) - 1) * 13 + 1
+        values[value] = 1
+    elif echo[1] == 'StopC':
+        value = (int(echo[4]) - 1) * 13 + 2
+        values[value] = 1
+    elif echo[1] == 'SlowVeh':
+        value = (int(echo[4]) - 1) * 13 + 3
+        values[value] = 1
+    elif echo[1] == 'Pedestrian':
+        value = (int(echo[4]) - 1) * 13 + 4
+        values[value] = 1
+    elif echo[1] == 'WrongWay':
+        value = (int(echo[4]) - 1) * 13 + 5
+        values[value] = 1
+    elif echo[1] == 'Visibility':
+        value = (int(echo[4]) - 1) * 13 + 6
+        values[value] = 1
+    elif echo[1] == 'Debris':
+        value = (int(echo[4]) - 1) * 13 + 7
+        values[value] = 1
+    elif echo[1] == 'SlowDown':
+        value = (int(echo[4]) - 1) * 13 + 8
+        values[value] = 1
+    elif echo[1] == 'Intrusion':
+        value = (int(echo[4]) - 1) * 13 + 9
+        values[value] = 1
+    elif echo[1] == 'StopV':
+        value = (int(echo[4]) - 1) * 13 + 10
+        values[value] = 1
+    elif echo[1] == 'User':
+        value = (int(echo[4]) - 1) * 13 + 11
+        values[value] = 1
+    elif echo[1] == 'User24H':
+        value = (int(echo[4]) - 1) * 13 + 12
+        values[value] = 1
 
     context[slave_id].setValues(register, address, values)
 
