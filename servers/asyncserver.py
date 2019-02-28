@@ -62,7 +62,6 @@ def updating_writer(a):
     results = q.get()
     if results:
         echo = results
-    socket_client_thr.join(timeout=2)
     # print(echo)
 
     values = context[slave_id].getValues(register, address, count=287)
@@ -110,6 +109,7 @@ def updating_writer(a):
     context[slave_id].setValues(register, address, values)
 
     log.debug("new values: " + str(values))
+    socket_client_thr.join(timeout=2)
 
 
 def run_updating_server():
