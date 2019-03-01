@@ -9,7 +9,7 @@ q = queue.Queue()
 
 class SocketClientThread(threading.Thread):
 
-    def __init__(self, _host="10.1.1.12", _port=44000):
+    def __init__(self, _host="192.168.0.108", _port=44000):
 
         threading.Thread.__init__(self)
         self.host = _host
@@ -85,3 +85,4 @@ if __name__ == "__main__":
         if results:
             echo = results
         print(echo)
+        th.join(timeout=1)
