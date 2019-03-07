@@ -15,7 +15,6 @@ class SocketClientThread(threading.Thread):
         self.host = _host
         self.port = _port
         self.sock = socket(AF_INET, SOCK_STREAM)
-        self.sock.connect((self.host, self.port))
 
     @staticmethod
     def get_text(obj, name):
@@ -27,6 +26,8 @@ class SocketClientThread(threading.Thread):
         # global results
         size = 65535
         with self.sock as _socket:
+            # Connect to server and send data
+            _socket.connect((self.host, self.port))
             while True:
                 try:
                     data = _socket.recv(size).decode('utf8', errors='ignore')
