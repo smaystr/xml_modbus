@@ -25,11 +25,11 @@ class SocketClientThread(threading.Thread):
 
         # global results
         size = 65535
-        with self.sock as _socket:
+        try:
             # Connect to server and send data
-            _socket.connect((self.host, self.port))
+            self.sock.connect((self.host, self.port))
             while True:
-                data = _socket.recv(size).decode('utf8', errors='ignore')
+                data = self.sock.recv(size).decode('utf8', errors='ignore')
                 if not data:
                     raise error('Client disconnected')
                 else:
@@ -68,6 +68,12 @@ class SocketClientThread(threading.Thread):
                             _column_ratio = self.get_text(alarm, 'ColumnRatio')
                             q.put([_alarm_id, _type, _comment, _video_clip_name, _camera_id, _camera_name,
                                    _lane_id, _start_time, _end_time, _row_ratio, _column_ratio])
+        except (ConnectionResetError, error) as e:
+            print(e)
+        except Exception as ex:
+            print(ex)
+        finally:
+            self.sock.close()
 
 
 if __name__ == "__main__":
