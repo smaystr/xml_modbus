@@ -5,8 +5,8 @@ import time
 
 
 class SocketSignOfLifeThread(Thread):
-    # def __init__(self, _host="192.168.0.108", _port=44000):
-    def __init__(self, _host="127.0.0.1", _port=44000):
+    def __init__(self, _host="192.168.0.108", _port=44000):
+    # def __init__(self, _host="127.0.0.1", _port=44000):
         Thread.__init__(self)
         self.data = '<CitiEvent Type="LIFESIG"><LIFESIG PeriodSec="30" TimeOutSec="60" /></CitiEvent>'
         self.host = _host

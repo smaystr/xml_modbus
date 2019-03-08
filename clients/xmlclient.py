@@ -9,8 +9,8 @@ q = queue.Queue()
 
 
 class SocketClientThread(Thread):
-    # def __init__(self, _host="192.168.0.108", _port=44000):
-    def __init__(self, _host="127.0.0.1", _port=44000):
+    def __init__(self, _host="192.168.0.108", _port=44000):
+    # def __init__(self, _host="127.0.0.1", _port=44000):
         Thread.__init__(self)
         self.host = _host
         self.port = _port
