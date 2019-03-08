@@ -30,7 +30,7 @@ from twisted.internet.task import LoopingCall
 # --------------------------------------------------------------------------- #
 from clients.xmlclient import SocketClientThread, q
 from clients.signoflife import client_run
-from threading import Thread
+from concurrent.futures import ThreadPoolExecutor
 # --------------------------------------------------------------------------- #
 # configure the service logging
 # --------------------------------------------------------------------------- #
@@ -45,9 +45,8 @@ log.setLevel(logging.DEBUG)
 # define callback process
 # --------------------------------------------------------------------------- #
 def updating_sgnol():
-    tf = Thread(target=client_run)
-    tf.start()
-    tf.join(timeout=1)
+    with ThreadPoolExecutor(max_workers=3) as pool:
+        pool.submit(client_run)
 
 
 def updating_writer(a):
@@ -63,8 +62,9 @@ def updating_writer(a):
     slave_id = 0x00
     address = 1000
 
-    socket_client_thr = SocketClientThread()
-    socket_client_thr.start()
+    with ThreadPoolExecutor(max_workers=3) as pool:
+        pool.submit(SocketClientThread().start())
+
     echo = ['0']*10
     results = q.get()
     if results:
@@ -116,7 +116,6 @@ def updating_writer(a):
     context[slave_id].setValues(register, address, values)
 
     log.debug("new values: " + str(values))
-    socket_client_thr.join(timeout=2)
 
 
 def run_updating_server():
