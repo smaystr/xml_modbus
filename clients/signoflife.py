@@ -5,8 +5,9 @@ import time
 
 
 class SocketSignOfLifeThread(Thread):
-    def __init__(self, _host="192.168.0.108", _port=44000):
+
     # def __init__(self, _host="127.0.0.1", _port=44000):
+    def __init__(self, _host="192.168.0.108", _port=44000):
         Thread.__init__(self)
         self.data = '<CitiEvent Type="LIFESIG"><LIFESIG PeriodSec="30" TimeOutSec="60" /></CitiEvent>'
         self.host = _host
@@ -23,6 +24,8 @@ class SocketSignOfLifeThread(Thread):
                 # Receive data from the server and shut down
                 # received = str(_socket.recv(1024), "utf-8")
                 # print("Received: {}".format(received))
+            except (ConnectionResetError, error) as e:
+                print(e)
             except Exception as ex:
                 print(ex)
 
