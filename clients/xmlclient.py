@@ -69,9 +69,7 @@ class SocketClientThread(Thread):
                                 _column_ratio = self.get_text(alarm, 'ColumnRatio')
                                 q.put([_alarm_id, _type, _comment, _video_clip_name, _camera_id, _camera_name,
                                        _lane_id, _start_time, _end_time, _row_ratio, _column_ratio])
-                except (ConnectionResetError, error) as e:
-                    print(e)
-                    break
+
                 except Exception as ex:
                     print(ex)
                     break

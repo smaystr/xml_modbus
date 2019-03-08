@@ -23,8 +23,6 @@ class SocketSignOfLifeThread(Thread):
                 # Receive data from the server and shut down
                 # received = str(_socket.recv(1024), "utf-8")
                 # print("Received: {}".format(received))
-            except (ConnectionResetError, error) as e:
-                print(e)
             except Exception as ex:
                 print(ex)
 
