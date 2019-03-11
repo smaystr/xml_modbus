@@ -3,6 +3,7 @@ import queue
 from threading import Thread
 from concurrent.futures import ThreadPoolExecutor
 import xml.etree.ElementTree as Et
+import time
 
 # creating queue instance
 q = queue.Queue()
@@ -13,6 +14,13 @@ class SocketClientThread(Thread):
     # def __init__(self, _host="127.0.0.1", _port=44000):
     def __init__(self, _host="192.168.0.108", _port=44000):
         Thread.__init__(self)
+# test
+#         self.sdata = '''<CitiEvent Type="Alarm"><Alarm Id="159612"> \
+# <Type>StopC</Type><CameraName>Camera 13</CameraName><CameraId>13</CameraId> \
+# <LaneId>2</LaneId><StartTime>2019/01/28 21:25:15</StartTime> \
+# <EndTime>2019/01/28 21:26:58</EndTime> \
+# <Comment></Comment><VideoClipName>C13_AXIS_28012019_202445_StopC.seq</VideoClipName> \
+# <RowRatio>21</RowRatio><ColumnRatio>269</ColumnRatio></Alarm></CitiEvent>'''
         self.host = _host
         self.port = _port
         self.sock = socket(AF_INET, SOCK_STREAM)
@@ -31,6 +39,8 @@ class SocketClientThread(Thread):
             _socket.connect((self.host, self.port))
             while True:
                 try:
+                    # test
+                    # _socket.sendall(bytes(self.sdata, encoding='utf-8', errors='ignore'))
                     data = _socket.recv(size).decode('utf8', errors='ignore')
                     if not data:
                         raise error('Client disconnected')
@@ -87,4 +97,5 @@ if __name__ == "__main__":
         if results:
             echo = results
         print(echo)
+        time.sleep(15)
 

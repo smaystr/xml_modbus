@@ -1,5 +1,6 @@
 from socket import socket, AF_INET, SOCK_STREAM, error
 from threading import Thread
+from multiprocessing import Process
 from concurrent.futures import ThreadPoolExecutor
 import time
 
@@ -9,7 +10,9 @@ class SocketSignOfLifeThread(Thread):
     # def __init__(self, _host="127.0.0.1", _port=44000):
     def __init__(self, _host="192.168.0.108", _port=44000):
         Thread.__init__(self)
-        self.data = '<CitiEvent Type="LIFESIG"><LIFESIG PeriodSec="30" TimeOutSec="60" /></CitiEvent>'
+        self.data = '''<CitiEvent Type="LIFESIG"> \
+<LIFESIG PeriodSec="30" TimeOutSec="60" /> \
+</CitiEvent>'''
         self.host = _host
         self.port = _port
         self.sock = socket(AF_INET, SOCK_STREAM)
@@ -40,5 +43,6 @@ def client_run():
 
 
 if __name__ == "__main__":
-    with ThreadPoolExecutor(max_workers=3) as pool:
-        pool.submit(client_run)
+    p = Process(target=client_run)
+    p.start()
+    p.join()

@@ -7,8 +7,9 @@ class ThreadedTCPRequestHandler(socketserver.BaseRequestHandler):
     def handle(self):
         # self.request is the TCP socket connected to the client
         data = str(self.request.recv(1024).strip(), encoding='utf-8', errors='ignore')
-        # data = '''<CitiEvent Type="Device"><Device><Name>Cam3</Name><Type>Camera</Type>
-        # <Address>192.168.0.12</Address><State>OK</State><CameraId>3</CameraId>
+        #  test
+        # data = '''<CitiEvent Type="Device"><Device><Name>Cam3</Name><Type>Camera
+        # </Type><Address>192.168.0.12</Address><State>OK</State><CameraId>3</CameraId>
         # <CameraName>Camera 3</CameraName></Device></CitiEvent>'''
         cur_thread = threading.current_thread()
         response = bytes("{}: {}".format(cur_thread.name, data), encoding='utf-8')

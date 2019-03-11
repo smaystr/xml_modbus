@@ -29,7 +29,6 @@ from twisted.internet.task import LoopingCall
 # import the XML client
 # --------------------------------------------------------------------------- #
 from clients.xmlclient import SocketClientThread, q
-from clients.signoflife import client_run
 from concurrent.futures import ThreadPoolExecutor
 # --------------------------------------------------------------------------- #
 # configure the service logging
@@ -44,11 +43,6 @@ log.setLevel(logging.DEBUG)
 # --------------------------------------------------------------------------- #
 # define callback process
 # --------------------------------------------------------------------------- #
-def updating_sgnol():
-    with ThreadPoolExecutor(max_workers=3) as pool:
-        pool.submit(client_run)
-
-
 def updating_writer(a):
     """ A worker process that runs every so often and
     updates live values of the context. It should be noted
@@ -216,8 +210,6 @@ def run_updating_server():
 
     loop = LoopingCall(f=updating_writer, a=(context,))
     loop.start(time, now=False)  # initially delay by time
-
-    updating_sgnol()
 
     StartTcpServer(context, identity=identity, address=modbus_addr)
 
