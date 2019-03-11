@@ -75,7 +75,11 @@ def updating_writer(a):
 
     if echo[1] == 'Camera':
         value = (int(echo[4]) - 1) * 13
-        values[value] = 1 if echo[3] == 'OK' else 0
+        if echo[3] == 'OK':
+            values[value] = 1
+        else:
+            for i in range(13):
+                values[value+i] = 0
     elif echo[1] == 'StopF':
         value = (int(echo[4]) - 1) * 13 + 1
         values[value] = 1
@@ -216,8 +220,6 @@ def run_updating_server():
     loop.start(time, now=False)  # initially delay by time
 
     StartTcpServer(context, identity=identity, address=modbus_addr)
-
-    updating_sgnol()
 
     # TCP Server with deferred reactor run
 
