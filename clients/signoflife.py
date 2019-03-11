@@ -25,9 +25,11 @@ class SocketSignOfLifeThread(Thread):
                 # received = str(_socket.recv(1024), "utf-8")
                 # print("Received: {}".format(received))
             except (ConnectionResetError, error) as e:
-                print(e)
+                # print(e)
+                pass
             except Exception as ex:
-                print(ex)
+                # print(ex)
+                pass
 
 
 def client_run():

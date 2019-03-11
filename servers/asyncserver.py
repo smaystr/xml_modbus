@@ -214,10 +214,10 @@ def run_updating_server():
     time = 5  # 1 seconds delay
     modbus_addr = "0.0.0.0", 5020
 
-    updating_sgnol()
-
     loop = LoopingCall(f=updating_writer, a=(context,))
     loop.start(time, now=False)  # initially delay by time
+
+    updating_sgnol()
 
     StartTcpServer(context, identity=identity, address=modbus_addr)
 
