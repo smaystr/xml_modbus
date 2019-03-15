@@ -36,9 +36,9 @@ from concurrent.futures import ThreadPoolExecutor
 import logging
 FORMAT = ('%(asctime)-15s %(threadName)-15s'
           ' %(levelname)-8s %(module)-15s:%(lineno)-8s %(message)s')
-logging.basicConfig(format=FORMAT)
+logging.basicConfig(format=FORMAT, filename="/tmp/updating_cameras_events.log", level=logging.INFO)
 log = logging.getLogger()
-log.setLevel(logging.DEBUG)
+# log.setLevel(logging.DEBUG)
 
 # --------------------------------------------------------------------------- #
 # define callback process
@@ -50,7 +50,6 @@ def updating_writer(a):
 
     :param arguments: The input arguments to the call
     """
-    log.debug("updating the context")
     context = a[0]
     register = 1
     slave_id = 0x00
@@ -60,60 +59,97 @@ def updating_writer(a):
         pool.submit(SocketClientThread().start())
 
     echo = ['0']*10
+    value = 0
     results = q.get()
-    if results:
-        echo = results
-    # print(echo)
-
     values = context[slave_id].getValues(register, address, count=287)
 
-    if echo[1] == 'Camera':
+    if results:
+        echo = results
         value = (int(echo[4]) - 1) * 13
+        log.info("server response: {}".format(str(echo)))
+
+    if echo[1] == 'Camera':
         if echo[3] == 'OK':
             values[value] = 1
         else:
-            for i in range(13):
-                values[value+i] = 0
+            values[value] = 0
+
     elif echo[1] == 'StopF':
-        value = (int(echo[4]) - 1) * 13 + 1
+        for i in range(1, 13):
+            values[value + i] = 0
+
         values[value] = 1
+        values[value + 1] = 1
     elif echo[1] == 'StopC':
-        value = (int(echo[4]) - 1) * 13 + 2
+        for i in range(1, 13):
+            values[value + i] = 0
+
         values[value] = 1
+        values[value + 2] = 1
     elif echo[1] == 'SlowVeh':
-        value = (int(echo[4]) - 1) * 13 + 3
+        for i in range(1, 13):
+            values[value + i] = 0
+
         values[value] = 1
+        values[value + 3] = 1
     elif echo[1] == 'Pedestrian':
-        value = (int(echo[4]) - 1) * 13 + 4
+        for i in range(1, 13):
+            values[value + i] = 0
+
         values[value] = 1
+        values[value + 4] = 1
     elif echo[1] == 'WrongWay':
-        value = (int(echo[4]) - 1) * 13 + 5
+        for i in range(1, 13):
+            values[value + i] = 0
+
         values[value] = 1
+        values[value + 5] = 1
     elif echo[1] == 'Visibility':
-        value = (int(echo[4]) - 1) * 13 + 6
+        for i in range(1, 13):
+            values[value + i] = 0
+
         values[value] = 1
+        values[value + 6] = 1
     elif echo[1] == 'Debris':
-        value = (int(echo[4]) - 1) * 13 + 7
+        for i in range(1, 13):
+            values[value + i] = 0
+
         values[value] = 1
+        values[value + 7] = 1
     elif echo[1] == 'SlowDown':
-        value = (int(echo[4]) - 1) * 13 + 8
+        for i in range(1, 13):
+            values[value + i] = 0
+
         values[value] = 1
+        values[value + 8] = 1
     elif echo[1] == 'Intrusion':
-        value = (int(echo[4]) - 1) * 13 + 9
+        for i in range(1, 13):
+            values[value + i] = 0
+
         values[value] = 1
+        values[value + 9] = 1
     elif echo[1] == 'StopV':
-        value = (int(echo[4]) - 1) * 13 + 10
+        for i in range(1, 13):
+            values[value + i] = 0
+
         values[value] = 1
+        values[value + 10] = 1
     elif echo[1] == 'User':
-        value = (int(echo[4]) - 1) * 13 + 11
+        for i in range(1, 13):
+            values[value + i] = 0
+
         values[value] = 1
+        values[value + 11] = 1
     elif echo[1] == 'User24H':
-        value = (int(echo[4]) - 1) * 13 + 12
+        for i in range(1, 13):
+            values[value + i] = 0
+
         values[value] = 1
+        values[value + 12] = 1
 
     context[slave_id].setValues(register, address, values)
 
-    log.debug("new values: " + str(values))
+    log.info("-- add values: \n {}".format(str(values)))
 
 
 def run_updating_server():

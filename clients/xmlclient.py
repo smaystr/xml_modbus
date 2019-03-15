@@ -5,6 +5,12 @@ from concurrent.futures import ThreadPoolExecutor
 import xml.etree.ElementTree as Et
 import time
 
+import logging
+FORMAT = ('%(asctime)-15s %(threadName)-15s'
+          ' %(levelname)-8s %(module)-15s:%(lineno)-8s %(message)s')
+logging.basicConfig(format=FORMAT, filename="/tmp/updating_cameras_events.log", level=logging.INFO)
+log = logging.getLogger()
+
 # creating queue instance
 q = queue.Queue()
 
@@ -46,6 +52,8 @@ class SocketClientThread(Thread):
                         raise error('Client disconnected')
                     else:
                         data = "<root>" + data + "</root>"
+
+                    log.info("-- add values: \n {}".format(str(data)))
 
                     tree = Et.XMLParser(encoding="utf-8")
                     tree = Et.fromstring(data, parser=tree)
