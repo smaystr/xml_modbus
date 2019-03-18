@@ -24,20 +24,24 @@ class SocketClientThread(Thread):
 #         self.sdata = '''<CitiEvent Type="LIFESIG"> \
 # <LIFESIG PeriodSec="30" TimeOutSec="60" /> \
 # </CitiEvent>'''
+
+# test
         # self.sdata = '''<CitiEvent Type="Alarm"><Alarm Id="159612"> \
 # <Type>StopC</Type><CameraName>Camera 13</CameraName><CameraId>13</CameraId> \
 # <LaneId>2</LaneId><StartTime>2019/01/28 21:25:15</StartTime> \
 # <EndTime>2019/01/28 21:26:58</EndTime> \
 # <Comment></Comment><VideoClipName>C13_AXIS_28012019_202445_StopC.seq</VideoClipName> \
 # <RowRatio>21</RowRatio><ColumnRatio>269</ColumnRatio></Alarm></CitiEvent>'''
+
         self.host = _host
         self.port = _port
         self.sock = socket(AF_INET, SOCK_STREAM)
 
     @staticmethod
-    def get_text(obj, name):
-        _obj = obj.find(name)
-        return _obj.text if type(_obj) != 'NoneType' else ""
+    def get_text(sbj, name):
+        _sbj = sbj.find(name)
+
+        return _sbj.text if _sbj is not None else ""
 
     def run(self):
 
@@ -46,9 +50,12 @@ class SocketClientThread(Thread):
         with self.sock as _socket:
             # Connect to server and send data
             _socket.connect((self.host, self.port))
+            # test
             # _socket.sendall(bytes(self.sdata, encoding='utf-8', errors='ignore'))
             while True:
                 try:
+                    # test
+                    # _socket.sendall(bytes(self.sdata, encoding='utf-8', errors='ignore'))
                     data = _socket.recv(size).decode('utf8', errors='ignore')
                     if not data:
                         raise error('Client disconnected')
@@ -67,29 +74,27 @@ class SocketClientThread(Thread):
 
                         if root.get('Type') == "Device":
                             for device in root.findall('Device'):
-                                _type = self.get_text(device, 'Type')
+                                _type = self.get_text(device, 'Type') #2
                                 _name = self.get_text(device, 'Name')
                                 _addr = self.get_text(device, 'Address')
                                 _state = self.get_text(device, 'State')
-                                _camera_id = self.get_text(device, 'CameraId')
+                                _camera_id = self.get_text(device, 'CameraId')  #4
                                 _camera_name = self.get_text(device, 'CameraName')
+
                                 q.put([_name, _type, _addr, _state, _camera_id, _camera_name])
 
                         if root.get('Type') == "Alarm":
                             for alarm in root.findall('Alarm'):
-                                _alarm_id = alarm.get('Id')
-                                _type = self.get_text(alarm, 'Type')
-                                _camera_name = self.get_text(alarm, 'CameraName')
-                                _camera_id = self.get_text(alarm, 'CameraId')
-                                _lane_id = self.get_text(alarm, 'LaneId')
                                 _start_time = self.get_text(alarm, 'StartTime')
+                                _type = self.get_text(alarm, 'Type')  #2
                                 _end_time = self.get_text(alarm, 'EndTime')
-                                _comment = self.get_text(alarm, 'Comment')
-                                _video_clip_name = self.get_text(alarm, 'VideoClipName')
-                                _row_ratio = self.get_text(alarm, 'RowRatio')
-                                _column_ratio = self.get_text(alarm, 'ColumnRatio')
-                                q.put([_alarm_id, _type, _comment, _video_clip_name, _camera_id, _camera_name,
-                                       _lane_id, _start_time, _end_time, _row_ratio, _column_ratio])
+                                _lane_id = self.get_text(alarm, 'LaneId')
+                                _camera_id = self.get_text(alarm, 'CameraId')  #4
+                                _camera_name = self.get_text(alarm, 'CameraName')
+                                _alarm_id = alarm.get('Id')
+
+                                q.put([_start_time, _type, _end_time, _lane_id, _camera_id, _camera_name, _alarm_id])
+
                 except (ConnectionResetError, error) as e:
                     # print(e)
                     break
@@ -108,5 +113,5 @@ if __name__ == "__main__":
             if results:
                 echo = results
             print(echo)
-        time.sleep(3)
+        time.sleep(1)
 
