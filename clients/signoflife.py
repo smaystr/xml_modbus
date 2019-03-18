@@ -37,7 +37,7 @@ class SocketSignOfLifeThread(Thread):
 
 def client_run():
     while True:
-        with ThreadPoolExecutor(max_workers=3) as spool:
+        with ThreadPoolExecutor(max_workers=1) as spool:
             spool.submit(SocketSignOfLifeThread().start())
         time.sleep(30)
 
