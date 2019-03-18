@@ -148,7 +148,8 @@ def updating_writer(a):
         values[value + 12] = 1
           
     log.info("and set values: \n {}".format(str(values)))
-
+    # values[0] = 1
+    # values[0+12] = 1
     context[slave_id].setValues(register, address, values)
     log.info("DONE!")
 
