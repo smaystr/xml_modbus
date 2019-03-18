@@ -151,7 +151,7 @@ def updating_writer(a):
     # values[0] = 1
     # values[0+12] = 1
     context[slave_id].setValues(register, address, values)
-    log.info("DONE!")
+    log.info("DONE")
 
 
 def run_updating_server():
