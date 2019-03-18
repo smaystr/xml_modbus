@@ -98,7 +98,7 @@ class SocketClientThread(Thread):
 
 if __name__ == "__main__":
     while True:
-        with ThreadPoolExecutor(max_workers=3) as pool:
+        with ThreadPoolExecutor(max_workers=1) as pool:
             pool.submit(SocketClientThread().start())
         echo = ['0']*11
         results = q.get()
