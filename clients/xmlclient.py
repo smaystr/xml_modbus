@@ -55,7 +55,7 @@ class SocketClientThread(Thread):
                     else:
                         data = "<root>" + data + "</root>"
 
-                    log.info("!!! xml client get values: \n {}".format(str(data)))
+                    log.info("XML-client get values: \n {}".format(str(data)))
 
                     tree = Et.XMLParser(encoding="utf-8")
                     tree = Et.fromstring(data, parser=tree)
