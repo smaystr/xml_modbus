@@ -243,7 +243,7 @@ def run_updating_server():
 
     # StartXMLClient
     # StartTcpServer
-    time = 5  # 1 seconds delay
+    time = 1  # 1 seconds delay
     modbus_addr = "0.0.0.0", 5020
 
     loop = LoopingCall(f=updating_writer, a=(context,))
