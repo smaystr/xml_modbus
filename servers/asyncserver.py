@@ -55,7 +55,7 @@ def updating_writer(a):
     slave_id = 0x00
     address = 1000
 
-    with ThreadPoolExecutor(max_workers=3) as pool:
+    with ThreadPoolExecutor(max_workers=1) as pool:
         pool.submit(SocketClientThread().start())
 
     echo = ['0']*10
@@ -146,10 +146,11 @@ def updating_writer(a):
 
         values[value] = 1
         values[value + 12] = 1
+          
+    log.info("and set values: \n {}".format(str(values)))
 
     context[slave_id].setValues(register, address, values)
-
-    log.info("-- add values: \n {}".format(str(values)))
+    log.info("DONE!")
 
 
 def run_updating_server():
