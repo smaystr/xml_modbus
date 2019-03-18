@@ -34,10 +34,13 @@ from concurrent.futures import ThreadPoolExecutor
 # configure the service logging
 # --------------------------------------------------------------------------- #
 import logging
+
 FORMAT = ('%(asctime)-15s %(threadName)-15s'
           ' %(levelname)-8s %(module)-15s:%(lineno)-8s %(message)s')
 logging.basicConfig(format=FORMAT, filename="/tmp/updating_cameras_events.log", level=logging.INFO)
 log = logging.getLogger()
+
+
 # log.setLevel(logging.DEBUG)
 
 # --------------------------------------------------------------------------- #
@@ -58,100 +61,87 @@ def updating_writer(a):
     with ThreadPoolExecutor(max_workers=1) as pool:
         pool.submit(SocketClientThread().start())
 
-    echo = ['0']*10
+    echo = ['0'] * 10
     value = 0
-    results = q.get()
+
     values = context[slave_id].getValues(register, address, count=287)
 
-    if results:
-        echo = results
-        value = (int(echo[4]) - 1) * 13
-        log.info("server response: {}".format(str(echo)))
-
-    if echo[1] == 'Camera':
-        if echo[3] == 'OK':
+    while not q.empty():
+        results = q.get()
+        if results:
+            echo = results
+            value = (int(echo[4]) - 1) * 13
+            log.info("server response: {}".format(str(echo)))
+        if echo[1] == 'Camera':
+            if echo[3] == 'OK':
+                values[value] = 1
+            else:
+                values[value] = 0
+        elif echo[1] == 'StopF':
+            for i in range(1, 13):
+                values[value + i] = 0
             values[value] = 1
-        else:
-            values[value] = 0
+            values[value + 1] = 1
+        elif echo[1] == 'StopC':
+            for i in range(1, 13):
+                values[value + i] = 0
+            values[value] = 1
+            values[value + 2] = 1
+        elif echo[1] == 'SlowVeh':
+            for i in range(1, 13):
+                values[value + i] = 0
+            values[value] = 1
+            values[value + 3] = 1
+        elif echo[1] == 'Pedestrian':
+            for i in range(1, 13):
+                values[value + i] = 0
+            values[value] = 1
+            values[value + 4] = 1
+        elif echo[1] == 'WrongWay':
+            for i in range(1, 13):
+                values[value + i] = 0
+            values[value] = 1
+            values[value + 5] = 1
+        elif echo[1] == 'Visibility':
+            for i in range(1, 13):
+                values[value + i] = 0
+            values[value] = 1
+            values[value + 6] = 1
+        elif echo[1] == 'Debris':
+            for i in range(1, 13):
+                values[value + i] = 0
+            values[value] = 1
+            values[value + 7] = 1
+        elif echo[1] == 'SlowDown':
+            for i in range(1, 13):
+                values[value + i] = 0
+            values[value] = 1
+            values[value + 8] = 1
+        elif echo[1] == 'Intrusion':
+            for i in range(1, 13):
+                values[value + i] = 0
+            values[value] = 1
+            values[value + 9] = 1
+        elif echo[1] == 'StopV':
+            for i in range(1, 13):
+                values[value + i] = 0
+            values[value] = 1
+            values[value + 10] = 1
+        elif echo[1] == 'User':
+            for i in range(1, 13):
+                values[value + i] = 0
+            values[value] = 1
+            values[value + 11] = 1
+        elif echo[1] == 'User24H':
+            for i in range(1, 13):
+                values[value + i] = 0
+            values[value] = 1
+            values[value + 12] = 1
 
-    elif echo[1] == 'StopF':
-        for i in range(1, 13):
-            values[value + i] = 0
-
-        values[value] = 1
-        values[value + 1] = 1
-    elif echo[1] == 'StopC':
-        for i in range(1, 13):
-            values[value + i] = 0
-
-        values[value] = 1
-        values[value + 2] = 1
-    elif echo[1] == 'SlowVeh':
-        for i in range(1, 13):
-            values[value + i] = 0
-
-        values[value] = 1
-        values[value + 3] = 1
-    elif echo[1] == 'Pedestrian':
-        for i in range(1, 13):
-            values[value + i] = 0
-
-        values[value] = 1
-        values[value + 4] = 1
-    elif echo[1] == 'WrongWay':
-        for i in range(1, 13):
-            values[value + i] = 0
-
-        values[value] = 1
-        values[value + 5] = 1
-    elif echo[1] == 'Visibility':
-        for i in range(1, 13):
-            values[value + i] = 0
-
-        values[value] = 1
-        values[value + 6] = 1
-    elif echo[1] == 'Debris':
-        for i in range(1, 13):
-            values[value + i] = 0
-
-        values[value] = 1
-        values[value + 7] = 1
-    elif echo[1] == 'SlowDown':
-        for i in range(1, 13):
-            values[value + i] = 0
-
-        values[value] = 1
-        values[value + 8] = 1
-    elif echo[1] == 'Intrusion':
-        for i in range(1, 13):
-            values[value + i] = 0
-
-        values[value] = 1
-        values[value + 9] = 1
-    elif echo[1] == 'StopV':
-        for i in range(1, 13):
-            values[value + i] = 0
-
-        values[value] = 1
-        values[value + 10] = 1
-    elif echo[1] == 'User':
-        for i in range(1, 13):
-            values[value + i] = 0
-
-        values[value] = 1
-        values[value + 11] = 1
-    elif echo[1] == 'User24H':
-        for i in range(1, 13):
-            values[value + i] = 0
-
-        values[value] = 1
-        values[value + 12] = 1
-          
-    log.info("and set values: \n {}".format(str(values)))
-    # values[0] = 1
-    # values[0+12] = 1
-    context[slave_id].setValues(register, address, values)
-    log.info("DONE")
+            log.info("and set values: \n {}".format(str(values)))
+            # values[0] = 1
+            # values[0+12] = 1
+            context[slave_id].setValues(register, address, values)
 
 
 def run_updating_server():
@@ -216,7 +206,7 @@ def run_updating_server():
     # ----------------------------------------------------------------------- #
     store = ModbusSlaveContext(
         # di=ModbusSequentialDataBlock(1000, [1]*287),
-        co=ModbusSequentialDataBlock(1000, [0]*287),
+        co=ModbusSequentialDataBlock(1000, [0] * 287),
         # hr=ModbusSequentialDataBlock(0, [17] * 100),
         # ir=ModbusSequentialDataBlock(0, [17] * 100),
     )
@@ -243,7 +233,7 @@ def run_updating_server():
 
     # StartXMLClient
     # StartTcpServer
-    time = 1  # 1 seconds delay
+    time = 3  # 1 seconds delay
     modbus_addr = "0.0.0.0", 5020
 
     loop = LoopingCall(f=updating_writer, a=(context,))
