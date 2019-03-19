@@ -70,8 +70,12 @@ def updating_writer(a):
         results = q.get()
         if results:
             echo = results
-            value = (int(echo[4]) - 1) * 13
-            log.info("server response: {}".format(str(echo)))
+            try:
+                value = (int(echo[4]) - 1) * 13
+            except ValueError:
+                continue
+        log.info("server response: {}".format(str(echo)))
+
         if echo[1] == 'Camera':
             if echo[3] == 'OK':
                 values[value] = 1

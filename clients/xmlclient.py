@@ -19,19 +19,16 @@ class SocketClientThread(Thread):
 
     # def __init__(self, _host="127.0.0.1", _port=44000):
     def __init__(self, _host="192.168.0.108", _port=44000):
-        Thread.__init__(self)
-# test
-#         self.sdata = '''<CitiEvent Type="LIFESIG"> \
-# <LIFESIG PeriodSec="30" TimeOutSec="60" /> \
-# </CitiEvent>'''
 
-# test
-        # self.sdata = '''<CitiEvent Type="Alarm"><Alarm Id="159612"> \
-# <Type>StopC</Type><CameraName>Camera 13</CameraName><CameraId>13</CameraId> \
-# <LaneId>2</LaneId><StartTime>2019/01/28 21:25:15</StartTime> \
-# <EndTime>2019/01/28 21:26:58</EndTime> \
-# <Comment></Comment><VideoClipName>C13_AXIS_28012019_202445_StopC.seq</VideoClipName> \
-# <RowRatio>21</RowRatio><ColumnRatio>269</ColumnRatio></Alarm></CitiEvent>'''
+        Thread.__init__(self)
+
+        # test
+        # a = '<CitiEvent Type="Alarm"><Alarm Id="159612"><Type>StopC</Type><CameraName>Camera 13</CameraName><CameraId>13</CameraId><LaneId>2</LaneId><StartTime>2019/01/28 21:25:15</StartTime><EndTime>2019/01/28 21:26:58</EndTime><Comment></Comment><VideoClipName>C13_AXIS_28012019_202445_StopC.seq</VideoClipName><RowRatio>21</RowRatio><ColumnRatio>269</ColumnRatio></Alarm></CitiEvent>'
+        # b = '<CitiEvent Type="Alarm"><Alarm Id="203370"><Type>SlowVeh</Type><CameraName>Camera 14</CameraName><CameraId>14</CameraId><LaneId>2</LaneId><StartTime>2019/03/19 01:59:28</StartTime><Comment></Comment><RowRatio>96</RowRatio><ColumnRatio>294</ColumnRatio></Alarm></CitiEvent>'
+        # c = '<CitiEvent Type="Alarm"><Alarm Id="203121"><Type>StopF</Type><CameraName>Camera 2</CameraName><CameraId>2</CameraId><LaneId>1</LaneId><StartTime>2019/03/18 22:22:13</StartTime><Comment></Comment><RowRatio>166</RowRatio><ColumnRatio>348</ColumnRatio></Alarm></CitiEvent>'
+        # d = '<CitiEvent Type="Alarm"><Alarm Id="203375"><Type>SlowVeh</Type><CameraName>Camera17</CameraName><CameraId>17</CameraId><LaneId>1</LaneId><StartTime>2019/03/19 02:00:31</StartTime><Comment></Comment><VideoClipName>C17_AXIS_19032019_005927_SlowVeh.seq</VideoClipName><RowRatio>92</RowRatio><ColumnRatio>325</ColumnRatio></Alarm></CitiEvent>'
+
+        # self.sdata = d
 
         self.host = _host
         self.port = _port
@@ -40,7 +37,6 @@ class SocketClientThread(Thread):
     @staticmethod
     def get_text(sbj, name):
         _sbj = sbj.find(name)
-
         return _sbj.text if _sbj is not None else ""
 
     def run(self):
@@ -50,7 +46,6 @@ class SocketClientThread(Thread):
         with self.sock as _socket:
             # Connect to server and send data
             _socket.connect((self.host, self.port))
-            # test
             # _socket.sendall(bytes(self.sdata, encoding='utf-8', errors='ignore'))
             while True:
                 try:
@@ -80,7 +75,6 @@ class SocketClientThread(Thread):
                                 _state = self.get_text(device, 'State')
                                 _camera_id = self.get_text(device, 'CameraId')  #4
                                 _camera_name = self.get_text(device, 'CameraName')
-
                                 q.put([_name, _type, _addr, _state, _camera_id, _camera_name])
 
                         if root.get('Type') == "Alarm":
